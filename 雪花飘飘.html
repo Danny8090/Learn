@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        .ball {
+            position: fixed;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white;
+        }
+    </style>
+</head>
+
+<body style="height:800px;background-color: black">
+</body>
+<script type="text/javascript">
+    //创建球构造函数
+    function Ball() {
+        this.size = Math.random() * 10 + 1 + "px";
+        // this.color = "rgba("+parseInt(Math.random()*255)+", "+parseInt(Math.random()*255)+", "+parseInt(Math.random()*255)+", .6)";
+        this.color = "white";
+        this.left = Math.random() * (document.documentElement.clientWidth - 10) + "px";
+        this.top = Math.random() * (document.documentElement.clientHeight - 10) + "px";
+        //初始化对象
+        this.init();
+    }
+    //小球公有属性
+    Ball.prototype = {
+        constructor: Ball,
+        init: function () {
+            this.ball = document.createElement("div");
+            this.ball.className = "ball";
+            this.ball.style.width = this.size;
+            this.ball.style.height = this.size;
+            this.ball.style.left = this.left;
+            this.ball.style.top = this.top;
+            this.ball.style.backgroundColor = this.color;
+            document.body.appendChild(this.ball);
+            this.down();
+        },
+        down: function () {
+            var ball = this.ball;
+            var speed = Math.random() * 5 + 1;
+            this.interval = setInterval(function () {
+                ball.style.top = ball.offsetTop + speed + "px";
+                // ball.style.left = ball.offsetLeft + 1 + "px";
+                if (ball.offsetTop > document.documentElement.clientHeight) {
+                    ball.style.top = "0px";
+                }
+            }, 20);
+        }
+    };
+    //清屏
+    document.body.innerHTML = "";
+    //绘制50个球
+    for (var n = 0; n < 150; n++) {
+        new Ball();
+    }
+</script>
+
+</html>
