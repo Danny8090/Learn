@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+
+		table{
+			width: 70%;
+			margin: 0 auto;
+			text-align: center;
+		}
+		div{
+			text-align: center;
+			margin: 20px auto;
+		}
+	</style>
+	<script type="text/javascript" src="util.js"></script>
+</head>
+<body>
+	<table cellpadding="0" cellspacing="0" border="1">
+		<thead>
+			<tr>
+				<th>姓名</th>
+				<th>姓别</th>
+				<th>年龄</th>
+				<th>住址</th>
+				<th>操作</th>
+				<th>选择</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- <tr>
+				<td>刘升升</td>
+				<td>男</td>
+				<td>18</td>
+				<td>龙乡中区</td>
+				<td>
+					<input type="button" value="新增" />
+					<input type="button" value="删除" />
+				</td>
+				<td>
+					<input type="checkbox" name="ck" />
+				</td>
+			</tr> -->
+		</tbody>
+	</table>
+	<div>
+		<input type="button" value="全选" onclick="ckFn(this);" />
+		<input type="button" value="取消全选" onclick="ckFn(this);" />
+		<input type="button" value="反选" onclick="ckFn(this);" />
+		<input type="button" value="选择删除" onclick="ckFn(this);" />
+	</div>
+
+	<script type="text/javascript">
+		
+		//获取tbody
+		var tbody = $('tbody');
+
+		//加载页面
+		function loadView () {
+			//加载数据，获取元数据
+			var personArr = loadData();
+			//创建下标
+			var idx = 0;
+			for (var eleArr of personArr) {
+				//在这里创建tr
+				var tr = createEle('tr');
+				//隔行换色（以后尽量用css去写）
+				if (idx % 2 == 0) {
+					tr.style.backgroundColor = getRandomColor();
+				}
+				//把tr添加到tBody中
+				tbody.appendChild(tr);
+
+				//数据所在的4个td，我们可以通过数据循环创建出来
+				for (var attr of eleArr) {
+					//在这里创建td
+					var attrTd = createEle('td');
+					//创建文本
+					var attrTdValue = createText(attr);
+					//文本放在td中
+					attrTd.appendChild(attrTdValue);
+					//把td添加到当前tr中
+					tr.appendChild(attrTd);
+				}
+
+				//在创建操作td
+				var optTd = createEle('td');
+				//把optTd添加到当前tr中
+				tr.appendChild(optTd);
+
+				//创建新增按钮
+				var insertBtn = createEle('input');
+				insertBtn.type = 'button';
+				insertBtn.value = '新增';
+				//今天暂时这么写，以后会写其它写法
+				insertBtn.setAttribute('onclick', 'insertFn(this);');
+				//以后这么写, insertFn就是函数名字
+				// insertBtn.onclick = insertFn;
+				//添加到optTd中
+				optTd.appendChild(insertBtn);
+
+				//创建删除按钮
+				var delBtn = createEle('input');
+				delBtn.type = 'button';
+				delBtn.value = '删除';
+				//今天暂时这么写，以后会写其它写法
+				delBtn.setAttribute('onclick', 'delFn(this);');
+				//以后这么写, insertFn就是函数名字
+				// insertBtn.onclick = insertFn;
+				//添加到optTd中
+				optTd.appendChild(delBtn);
+
+				//创建选择td
+				var ckTd = createEle('td');
+				//把ckTd添加到当前tr中
+				tr.appendChild(ckTd);
+
+				//创建checkbox
+				var ckBox = createEle('input');
+				ckBox.type = 'checkbox';
+				ckBox.name = 'ck';
+				//把ckBox添加到ckTd中
+				ckTd.appendChild(ckBox);
+				//idx++
+				idx++;
+			}
+		}
+
+		loadView();
+
+
+
+
+		console.log(loadData());
+
+		//模拟数据请求，构造假数据
+		function loadData () {
+			//存储每一行的最外层数组
+			var resultArr = [];
+			for (var i = 0; i < 10; i++) {
+				//每一行的每一个元素又是一个数组，用来存储属性
+				var attrArr = [];
+				attrArr.push('刘升升' + i);
+				attrArr.push('男' + i);
+				attrArr.push(18 + i);
+				attrArr.push('龙乡中区' + i);
+				//添加到当前外层数组所在的元素
+				resultArr.push(attrArr);
+			}
+			return resultArr;
+		}
+
+		//表格下面按钮操作
+		function ckFn (ele) {
+			//获取所有的checkbox
+			var ckArr = $All('input[name=ck]');
+
+			switch (ele.value) {
+				case '全选':
+					for (var i = 0; i < ckArr.length; i++) {
+						ckArr[i].checked = true;
+						// ckArr[i].setAttribute('haha', '笑了');
+					}
+				break;
+				case '取消全选':
+					for (var i = 0; i < ckArr.length; i++) {
+						ckArr[i].checked = false;
+					}
+				break;
+				case '反选':
+					for (var i = 0; i < ckArr.length; i++) {
+						if (ckArr[i].checked == true) {
+							ckArr[i].checked = false;
+						} else {
+							ckArr[i].checked = true;
+						}
+					}
+				break;
+				case '选择删除':
+					for (var i = 0; i < ckArr.length; i++) {
+						if (ckArr[i].checked == true) {
+							tbody.removeChild(ckArr[i].parentNode.parentNode);
+						}
+					}
+				break;
+				default:
+				break;
+			}
+		}
+
+		//单行删除
+		function delFn (ele) {
+			if (confirm('您确定要删除这一行数据么？')) {
+				tbody.removeChild(ele.parentNode.parentNode);
+			}
+		}
+
+		//新增
+		function insertFn (ele) {
+			var cloneTr = ele.parentNode.parentNode.cloneNode(true);
+			cloneTr.style.backgroundColor = getRandomColor();
+			tbody.insertBefore(cloneTr, ele.parentNode.parentNode);
+		}
+		
+
+
+
+
+
+
+	</script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
