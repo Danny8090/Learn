@@ -1,2 +1,7 @@
 # danny.github.io
-怎么使用Github
+## 记录我的一些学习信息
+1.怎么使用Github
+2.Web前端知识HTML和CSS
+3.JavaScript知识
+4.Python学习记录
+5.Automation学习记录
